@@ -6,7 +6,7 @@ from api_v1.views import QuoteViewSet
 app_name = 'api_v1'
 
 router = DefaultRouter()
-router.register(r'quotes', QuoteViewSet)
+router.register(r'quotes', QuoteViewSet, basename='quote')
 
 urlpatterns = [
     path('', include(router.urls)),

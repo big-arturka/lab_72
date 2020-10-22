@@ -2,10 +2,13 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 
-CATEGORY_CHOICES = (
-    ('new', 'Новая'),
-    ('moderated', 'Модерированая')
+STATUS_NEW = 'new'
+STATUS_MODERATED = 'moderated'
+STATUS_CHOICES = (
+    (STATUS_NEW, 'Новая'),
+    (STATUS_MODERATED, 'Модерированная')
 )
+DEFAULT_STATUS = STATUS_NEW
 
 
 class Quote(models.Model):
@@ -13,8 +16,12 @@ class Quote(models.Model):
     author = models.CharField(max_length=100, verbose_name='Автор цитаты')
     email = models.EmailField(max_length=100, verbose_name='Почта')
     rating = models.IntegerField(verbose_name='Рейтинг', default=0)
-    status = models.CharField(max_length=100, verbose_name='Статус', choices=CATEGORY_CHOICES, default='new')
+    status = models.CharField(max_length=100, verbose_name='Статус', choices=STATUS_CHOICES, default=STATUS_NEW)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+
+    @classmethod
+    def get_moderated(cls):
+        return cls.objects.filter(status=STATUS_MODERATED)
 
     def __str__(self):
         return f'{self.author} - {self.text}'
