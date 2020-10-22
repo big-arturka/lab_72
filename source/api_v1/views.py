@@ -7,6 +7,7 @@ from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet, ModelViewSet
+from .permissions import QuotePermissions
 
 from api_v1.serializers import QuoteSerializer, CreateQuoteSerializer, UpdateQuoteSerializer
 from webapp.models import Quote
@@ -14,6 +15,7 @@ from webapp.models import Quote
 
 class QuoteViewSet(ModelViewSet):
     queryset = Quote.objects.all()
+    permission_classes = [QuotePermissions]
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
