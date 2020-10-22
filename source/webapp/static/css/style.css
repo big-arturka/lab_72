@@ -215,3 +215,46 @@ input[type='submit']:hover {
     border-color: #444444;
     color: #444444;
 }
+
+.form-label {
+    display: block;
+    margin-bottom: 20px;
+}
+.form {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    border: solid 1px black;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.btn {
+    background: #6a7dff;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: gainsboro;
+    color: #6a7dff;
+    border: solid 1px black;
+}
+
+.text-input {
+    width: 800px;
+    height: 150px;
+}
+.author-input {
+    width: 800px;
+    height: 30px;
+}
+.email-input {
+    width: 800px;
+    height: 30px;
+}
