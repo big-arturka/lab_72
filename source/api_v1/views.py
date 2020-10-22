@@ -8,14 +8,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet, ModelViewSet
 
-from api_v1.serializers import QuoteSerializer
+from api_v1.serializers import QuoteSerializer, CreateQuoteSerializer, UpdateQuoteSerializer
 from webapp.models import Quote
 
 
 class QuoteViewSet(ModelViewSet):
     queryset = Quote.objects.all()
-    serializer_class = QuoteSerializer
 
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateQuoteSerializer
+        elif self.request.method == 'PUT':
+            return UpdateQuoteSerializer
+        else:
+            return QuoteSerializer
 
 #
 # class OrderViewSet(ViewSet):
