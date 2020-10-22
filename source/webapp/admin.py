@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from webapp.models import Quote, Vote
+
+admin.site.register(Quote)
+admin.site.register(Vote)

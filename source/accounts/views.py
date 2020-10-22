@@ -14,7 +14,6 @@ from django.conf import settings
 
 from accounts.forms import MyUserCreationForm, UserChangeForm, ProfileChangeForm, \
     PasswordChangeForm, PasswordResetEmailForm, PasswordResetForm
-from webapp.models import Cart
 from .models import AuthToken, Profile
 
 
@@ -158,11 +157,3 @@ class UserPasswordResetView(UpdateView):
 
     def get_token(self):
         return AuthToken.get_token(self.kwargs.get('token'))
-
-
-class CartClearLogoutView(LogoutView):
-    @method_decorator(never_cache)
-    def dispatch(self, request, *args, **kwargs):
-        cart_ids = request.session.get('cart_ids', [])
-        Cart.objects.filter(pk__in=cart_ids).delete()
-        return super().dispatch(request, *args, **kwargs)
