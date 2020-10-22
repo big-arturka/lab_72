@@ -14,6 +14,7 @@ class Quote(models.Model):
     email = models.EmailField(max_length=100, verbose_name='Почта')
     rating = models.IntegerField(verbose_name='Рейтинг', default=0, validators=[MinValueValidator(0)])
     status = models.CharField(max_length=100, verbose_name='Статус', choices=CATEGORY_CHOICES, default='new')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
 
     def __str__(self):
         return f'{self.author} - {self.text}'
