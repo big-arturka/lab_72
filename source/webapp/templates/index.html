@@ -5,24 +5,25 @@
     <div class="quote-container">
 
     </div>
-    <div class="form">
-    <h1 class="form-title">Создайте цитату!</h1>
+    <div class="form hidden">
+        <h1 class="form-title">Создайте цитату!</h1>
         <form method="post">
+            {% csrf_token %}
             <label class="form-label">
                 Цитата:
-                <textarea class="text-input" name="text"></textarea>
+                <textarea id="text" class="text-input" name="text"></textarea>
             </label>
             <br>
             <label class="form-label">
                 Автор:
-                <input class="author-input" type="text" name="author">
+                <input id="author" class="author-input" type="text" name="author">
             </label>
             <br>
             <label class="form-label">
                 Почта:
-                <input class="email-input" type="email" name="email">
+                <input id="email" class="email-input" type="email" name="email">
             </label>
-            <a href="#" type="submit" class="btn">Создать</a>
+            <a href="http://localhost:8000/api/quotes/" id="submit" data-target="submit" type="submit" class="btns">Создать</a>
         </form>
     </div>
 

@@ -6,6 +6,7 @@ from webapp.models import Quote
 
 class QuoteSerializer(serializers.ModelSerializer):
     status_display = CharField(max_length=20, source='get_status_display', read_only=True)
+    url = serializers.HyperlinkedIdentityField(read_only=True, view_name='api:quote-detail')
 
     class Meta:
         model = Quote

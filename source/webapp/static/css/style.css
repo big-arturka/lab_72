@@ -230,7 +230,7 @@ input[type='submit']:hover {
     padding: 20px;
 }
 
-.btn {
+.btns {
     background: #6a7dff;
     box-sizing: border-box;
     padding: 10px;
@@ -240,10 +240,9 @@ input[type='submit']:hover {
     display: inline-block;
 }
 
-.btn:hover {
+.btns:hover {
     background: gainsboro;
     color: #6a7dff;
-    border: solid 1px black;
 }
 
 .text-input {
@@ -257,4 +256,9 @@ input[type='submit']:hover {
 .email-input {
     width: 800px;
     height: 30px;
+}
+
+/*hidden*/
+.hidden {
+    display: none;
 }
