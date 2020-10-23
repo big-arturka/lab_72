@@ -71,18 +71,29 @@ async function mainPage() {
         div.appendChild(quoteLink)
         quoteContainer.appendChild(div)
     }
+
+    let form = document.getElementsByClassName('form')[0]
+    form.className = 'form'
+    let sbm = document.getElementById('submit')
+    sbm.addEventListener('click', submit)
     const btns = document.getElementsByClassName('btn')
     for (btn of btns) {
         btn.addEventListener('click', onClick)
     }
 
     async function submit(event) {
+        event.preventDefault()
         let url = event.target.href;
-        await makeRequest(url, 'POST', {
+        try {
+            await makeRequest(url, 'POST', {
             'text': document.getElementById('text').value,
             'author': document.getElementById('author').value,
             'email': document.getElementById('email').value
         }).then(response => response.json())
+        }
+        catch (error) {
+             console.log(error);
+        }
     }
 
     async function onClick(event) {
@@ -94,12 +105,6 @@ async function mainPage() {
             form.className = 'form hidden'
         } else if (event.target.dataset['target'] === 'create') {
             quoteContainer.className = 'hidden'
-
-            let form = document.getElementsByClassName('form')[0]
-            form.className = 'form'
-            let sbm = document.getElementById('submit')
-            sbm.addEventListener('click', submit)
-
         } else {
             let url = event.target.href;
             let data = await makeRequest(url, 'GET').then(response => response.json())
