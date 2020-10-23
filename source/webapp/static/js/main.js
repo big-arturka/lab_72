@@ -1,4 +1,6 @@
 const quoteContainer = document.getElementsByClassName('quote-container')[0]
+const detailContainer = document.getElementsByClassName('detail-container')[0]
+const form = document.getElementsByClassName('form')[0]
 const BASE_URL = 'http://localhost:8000';
 
 function getCookie(name) {
@@ -72,14 +74,6 @@ async function mainPage() {
         quoteContainer.appendChild(div)
     }
 
-    let form = document.getElementsByClassName('form')[0]
-    form.className = 'form'
-    let sbm = document.getElementById('submit')
-    sbm.addEventListener('click', submit)
-    const btns = document.getElementsByClassName('btn')
-    for (btn of btns) {
-        btn.addEventListener('click', onClick)
-    }
 
     async function submit(event) {
         event.preventDefault()
@@ -101,15 +95,64 @@ async function mainPage() {
         if (event.target.dataset['target'] === 'main') {
             quoteContainer.className = 'quote-container'
 
-            let form = document.getElementsByClassName('form')[0]
+            detailContainer.className = 'detail-container hidden'
             form.className = 'form hidden'
         } else if (event.target.dataset['target'] === 'create') {
-            quoteContainer.className = 'hidden'
+            form.className = 'form'
+
+            detailContainer.className = 'detail-container hidden'
+            quoteContainer.className = 'quote-container hidden'
         } else {
+            detailContainer.className = 'detail-container'
+
+            quoteContainer.className = 'quote-container hidden'
+            form.className = 'form hidden'
+
             let url = event.target.href;
             let data = await makeRequest(url, 'GET').then(response => response.json())
-            console.log(data)
+
+            let div = document.createElement('div')
+            div.className = 'detail-div'
+
+            let title = document.createElement('h2')
+            title.className = 'detail-title'
+            title.innerText = data.author
+
+            let text = document.createElement('p')
+            text.className = 'detail-text'
+            text.innerText = data.text
+
+            let email = document.createElement('p')
+            email.className = 'detail-div'
+            email.innerText = data.email
+
+            let date = document.createElement('p')
+            date.className = 'detail-date'
+            date.innerText = data.created_at
+
+            let rait = document.createElement('p')
+            rait.className = 'detail-rait'
+            rait.innerText = data.rating
+
+            let status = document.createElement('p')
+            status.className = 'detail-status'
+            status.innerText = data.status
+
+            div.appendChild(title)
+            div.appendChild(text)
+            div.appendChild(email)
+            div.appendChild(date)
+            div.appendChild(rait)
+            div.appendChild(status)
+            detailContainer.appendChild(div)
         }
+    }
+
+    let sbm = document.getElementById('submit')
+    sbm.addEventListener('click', submit)
+    const btns = document.getElementsByClassName('btn')
+    for (btn of btns) {
+        btn.addEventListener('click', onClick)
     }
 }
 

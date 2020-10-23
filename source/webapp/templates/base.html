@@ -17,7 +17,7 @@
     <nav class="navbar">
         <div class="container">
             <ul class="menu">
-                <li><a class="btn" href="http://localhost:8000/api/quotes/" data-target="main">Home</a></li>
+                <li><a id="quote" class="btn" href="http://localhost:8000/api/quotes/" data-target="main">Home</a></li>
                 {% if request.user.is_authenticated %}
                     {% block menu %}{% endblock %}
                     <li><a class="btn" href="#" data-target="create">Добавить цитату</a></li>
