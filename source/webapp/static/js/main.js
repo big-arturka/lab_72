@@ -1,159 +1,158 @@
-const quoteContainer = document.getElementsByClassName('quote-container')[0]
-const detailContainer = document.getElementsByClassName('detail-container')[0]
-const form = document.getElementsByClassName('form')[0]
-const BASE_URL = 'http://localhost:8000';
+window.addEventListener('DOMContentLoaded',() => {
+    const quoteContainer = $('.quote-container')[0]
+    const detailContainer = $('.detail-container')[0]
+    const form = $('.form')[0]
+    const BASE_URL = 'http://localhost:8000/api/quotes/';
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        let cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
-    }
-    return cookieValue;
-}
-
-function csrfSafeMethod(method) {
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
-async function makeRequest(url, method='GET', data=undefined) {
-    let opts = {method, headers: {}};
-
-    if (!csrfSafeMethod(method))
-        opts.headers['X-CSRFToken'] = getCookie('csrftoken');
-
-    if (data) {
-        opts.headers['Content-Type'] = 'application/json';
-        opts.body = JSON.stringify(data);
+        return cookieValue;
     }
 
-    let response = await fetch(url, opts);
-
-    if (response.ok) {
-        return response;
-    } else {
-        let error = new Error(response.statusText);
-        error.response = response;
-        throw error;
-    }
-}
-
-async function mainPage() {
-    let answer = await makeRequest(BASE_URL + '/api/quotes/', 'GET').then(response => response.json())
-    for (let quote of answer) {
-        let div = document.createElement('div')
-        div.className = 'quote-div'
-
-        let quoteText = document.createElement('p')
-        quoteText.className = 'quote-text'
-        quoteText.innerText = quote.text
-
-        let quoteDate = document.createElement('p')
-        quoteDate.className = 'quote-date'
-        quoteDate.innerText = quote.created_at
-
-        let quoteRait = document.createElement('p')
-        quoteRait.className = 'quote-rait'
-        quoteRait.innerText = quote.rating
-
-        let quoteLink = document.createElement('a')
-        quoteLink.className = 'btn btns'
-        quoteLink.href = quote.url
-        quoteLink.innerText = 'Подробнее'
-
-        div.appendChild(quoteText)
-        div.appendChild(quoteDate)
-        div.appendChild(quoteRait)
-        div.appendChild(quoteLink)
-        quoteContainer.appendChild(div)
+    function csrfSafeMethod(method) {
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
+    async function makeRequest(url, method='GET', data=undefined) {
+        let opts = {method, headers: {}};
 
-    async function submit(event) {
+        if (!csrfSafeMethod(method))
+            opts.headers['X-CSRFToken'] = getCookie('csrftoken');
+
+        if (data) {
+            opts.headers['Content-Type'] = 'application/json';
+            opts.body = JSON.stringify(data);
+        }
+
+        let response = await fetch(url, opts);
+
+        if (response.ok) {
+            return response;
+        } else {
+            let error = new Error(response.statusText);
+            error.response = response;
+            throw error;
+        }
+    }
+
+    async function quoteList(event) {
         event.preventDefault()
-        let url = event.target.href;
+        $(quoteContainer).empty();
+        let answer = await makeRequest(BASE_URL, 'GET').then(response => response.json())
+        for (let quote of answer) {
+            let div = $('<div></div>')
+            $(div).addClass('quote-list')
+
+            let quoteText = $('<p>')
+            $(quoteText).text(`Цитата: ${quote.text}`)
+
+            let quoteDate = $('<p>')
+            $(quoteDate).text(`Создано: ${quote.created_at}`)
+
+            let quoteRait = $('<p>')
+            $(quoteRait).text(`Рейтинг: ${quote.rating}`)
+
+
+            let quoteLink = $('<a>')
+            $(quoteLink).attr('href', quote.url)
+            $(quoteLink).addClass('btn detail')
+            $(quoteLink).text('Подробнее')
+
+            $(div).append(quoteText, quoteRait, quoteDate, quoteLink)
+            $(quoteContainer).append(div)
+
+            $(detailContainer).addClass('hidden')
+            $(form).addClass('hidden')
+            $(quoteContainer).removeClass('hidden')
+        }
+    }
+
+    async function saveForm(event) {
+        event.preventDefault()
+        const text = $('#text-input')
+        const author = $('#author-input')
+        const email = $('#email-input')
+
         try {
-            await makeRequest(url, 'POST', {
-            'text': document.getElementById('text').value,
-            'author': document.getElementById('author').value,
-            'email': document.getElementById('email').value
-        }).then(response => response.json())
+            await makeRequest(BASE_URL, 'POST', {
+                'text': $(text).val(),
+                'author': $(author).val(),
+                'email': $(email).val()
+            }).then(response => response.json())
         }
         catch (error) {
-             console.log(error);
+            console.log(error);
         }
+        $(text).valueOf()
+        $(author).valueOf()
+        $(email).valueOf()
+
+    //    Добавить уведомление
     }
 
-    async function onClick(event) {
+    async function quoteDetail(event) {
         event.preventDefault()
-        if (event.target.dataset['target'] === 'main') {
-            quoteContainer.className = 'quote-container'
 
-            detailContainer.className = 'detail-container hidden'
-            form.className = 'form hidden'
-        } else if (event.target.dataset['target'] === 'create') {
-            form.className = 'form'
+        $(detailContainer).removeClass('hidden')
+        $(quoteContainer).addClass('hidden')
+        $(form).addClass('hidden')
 
-            detailContainer.className = 'detail-container hidden'
-            quoteContainer.className = 'quote-container hidden'
-        } else {
-            detailContainer.className = 'detail-container'
+        let url = event.target.href;
+        let data = await makeRequest(url, 'GET').then(response => response.json())
 
-            quoteContainer.className = 'quote-container hidden'
-            form.className = 'form hidden'
+        let div = $('<div>')
+        $(div).addClass('quote-detail')
 
-            let url = event.target.href;
-            let data = await makeRequest(url, 'GET').then(response => response.json())
+        let title = $('<h2>')
+        $(title).text(`Автор: ${data.author}`)
 
-            let div = document.createElement('div')
-            div.className = 'detail-div'
+        let text = $('<p>')
+        $(text).text(`Цитата "${data.text}"`)
 
-            let title = document.createElement('h2')
-            title.className = 'detail-title'
-            title.innerText = data.author
+        let email = $('<p>')
+        $(email).text(`Почта: ${data.email}`)
 
-            let text = document.createElement('p')
-            text.className = 'detail-text'
-            text.innerText = data.text
+        let date = $('<p>')
+        $(date).text(`Создано: ${data.created_at}`)
 
-            let email = document.createElement('p')
-            email.className = 'detail-div'
-            email.innerText = data.email
+        let rait = $('<p>')
+        $(rait).text(`Рейтинг: ${data.rating}`)
 
-            let date = document.createElement('p')
-            date.className = 'detail-date'
-            date.innerText = data.created_at
+        let status = $('<p>')
+        $(status).text(`Статус: ${data.status}`)
 
-            let rait = document.createElement('p')
-            rait.className = 'detail-rait'
-            rait.innerText = data.rating
-
-            let status = document.createElement('p')
-            status.className = 'detail-status'
-            status.innerText = data.status
-
-            div.appendChild(title)
-            div.appendChild(text)
-            div.appendChild(email)
-            div.appendChild(date)
-            div.appendChild(rait)
-            div.appendChild(status)
-            detailContainer.appendChild(div)
-        }
+        $(div).append(title, text, email, date, rait, status)
+        $(detailContainer).append(div)
     }
 
-    let sbm = document.getElementById('submit')
-    sbm.addEventListener('click', submit)
-    const btns = document.getElementsByClassName('btn')
-    for (btn of btns) {
-        btn.addEventListener('click', onClick)
+    async function getForm(event) {
+        event.preventDefault()
+        $(detailContainer).addClass('hidden')
+        $(quoteContainer).addClass('hidden')
+        $(form).removeClass('hidden')
     }
-}
 
-mainPage();
+    const homeBtn = $('#home')
+    $(homeBtn).on('click', quoteList)
+
+    const getFormBtn = $('#create')
+    $(getFormBtn).on('click', getForm)
+
+    let saveBtn = $('#submit')
+    $(saveBtn).on('click', saveForm)
+
+    let detailBtn = $('.detail')
+    $(detailBtn).on('click', quoteDetail)
+
+
+})

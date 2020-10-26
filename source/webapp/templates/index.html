@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="detail-container">
+    <div class="quote-container hidden">
 
     </div>
 
-    <div class="quote-container">
+    <div class="detail-container hidden">
 
     </div>
 
@@ -15,19 +15,19 @@
             {% csrf_token %}
             <label class="form-label">
                 Цитата:
-                <textarea id="text" class="text-input" name="text"></textarea>
+                <textarea id="text-input" name="text"></textarea>
             </label>
             <br>
             <label class="form-label">
                 Автор:
-                <input id="author" class="author-input" type="text" name="author">
+                <input id="author-input" type="text" name="author">
             </label>
             <br>
             <label class="form-label">
                 Почта:
-                <input id="email" class="email-input" type="email" name="email">
+                <input id="email-input" type="email" name="email">
             </label>
-            <a href="http://localhost:8000/api/quotes/" id="submit" data-target="submit" type="submit" class="btns">Создать</a>
+            <input id="submit" type="submit" value="Создать">
         </form>
     </div>
 

@@ -10,7 +10,7 @@ class QuoteViewSet(ModelViewSet):
     permission_classes = [QuotePermissions]
 
     def get_queryset(self):
-        if self.request.method == 'GET' and not self.request.user.has_perm('webapp.quote_view'):
+        if self.request.method == 'GET' and not self.request.user.has_perm('webapp.view_quote'):
             return Quote.get_moderated()
         return Quote.objects.all()
 

@@ -230,30 +230,15 @@ input[type='submit']:hover {
     padding: 20px;
 }
 
-.btns {
-    background: #6a7dff;
-    box-sizing: border-box;
-    padding: 10px;
-    border-radius: 10px;
-    text-decoration: none;
-    color: white;
-    display: inline-block;
-}
-
-.btns:hover {
-    background: gainsboro;
-    color: #6a7dff;
-}
-
-.text-input {
+#text-input {
     width: 800px;
     height: 150px;
 }
-.author-input {
+#author-input {
     width: 800px;
     height: 30px;
 }
-.email-input {
+#email-input {
     width: 800px;
     height: 30px;
 }
@@ -261,4 +246,31 @@ input[type='submit']:hover {
 /*hidden*/
 .hidden {
     display: none;
+}
+
+.quote-list {
+    border: solid 1px black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.quote-detail {
+    border: solid 1px black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.btn {
+    box-sizing: border-box;
+    padding: 5px;
+    border: solid 1px black;
+    border-radius: 5px;
+    background: #6a7dff;
+    color: white;
+    font-weight: bold;
+    margin-right: 20px;
+    text-decoration: none;
 }
