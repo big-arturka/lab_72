@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded',() => {
+$(document).ready(function () {
     const quoteContainer = $('.quote-container')[0]
     const detailContainer = $('.detail-container')[0]
     const container = $('.container')[1]
