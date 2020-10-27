@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded',() => {
     const quoteContainer = $('.quote-container')[0]
     const detailContainer = $('.detail-container')[0]
+    const container = $('.container')[1]
     const form = $('.form')[0]
     const BASE_URL = 'http://localhost:8000/api/quotes/';
 
@@ -68,13 +69,31 @@ window.addEventListener('DOMContentLoaded',() => {
             $(quoteLink).addClass('btn detail')
             $(quoteLink).text('Подробнее')
 
-            $(div).append(quoteText, quoteRait, quoteDate, quoteLink)
+            let addBtn = $('<a>')
+            $(addBtn).attr('href', '#')
+            $(addBtn).addClass('btn add')
+            $(addBtn).attr('id', quote.id)
+            $(addBtn).text('+')
+
+            let removeBtn = $('<a>')
+            $(removeBtn).attr('href', '#')
+            $(removeBtn).addClass('btn remove')
+            $(removeBtn).attr('id', quote.id)
+            $(removeBtn).text('-')
+
+            $(div).append(quoteText, quoteRait, quoteDate, quoteLink, addBtn, removeBtn)
             $(quoteContainer).append(div)
 
             $(detailContainer).addClass('hidden')
             $(form).addClass('hidden')
             $(quoteContainer).removeClass('hidden')
         }
+        let detailBtn = $('.detail')
+        for(btn of detailBtn) {$(btn).on('click', quoteDetail)}
+
+        $('.add').on('click', addVote)
+        $('.remove').on('click', removeVote)
+
     }
 
     async function saveForm(event) {
@@ -89,19 +108,46 @@ window.addEventListener('DOMContentLoaded',() => {
                 'author': $(author).val(),
                 'email': $(email).val()
             }).then(response => response.json())
+            push('Успешно создано!', 'lightgreen')
         }
         catch (error) {
             console.log(error);
+            push('Не удалось создать! Проверьте данные и повторите попытку', 'red')
         }
-        $(text).valueOf()
-        $(author).valueOf()
-        $(email).valueOf()
+        $(text).val('')
+        $(author).val('')
+        $(email).val('')
 
-    //    Добавить уведомление
+        function push(message, color) {
+            let div = $('<div>')
+            $(div).addClass('push')
+
+            let title = $('<h1>')
+            $(title).addClass('title')
+            $(title).text('Уведомление!!!')
+
+            let body = $('<h3>')
+            $(body).addClass('modal-body')
+            $(body).text(message)
+
+            let btn = $('<button>')
+            $(btn).addClass('button')
+            $(btn).text('Закрыть')
+            $(div).append(title, body, btn)
+
+            $(div).css('background', color)
+            $(container).append(div)
+            let closeBtn = $('.button')
+            $(closeBtn).on('click', () => {$(div).remove()})
+            setTimeout(function() {
+                $(div).remove()
+            }, 3000);
+        }
     }
 
     async function quoteDetail(event) {
         event.preventDefault()
+         $(detailContainer).empty();
 
         $(detailContainer).removeClass('hidden')
         $(quoteContainer).addClass('hidden')
@@ -142,6 +188,26 @@ window.addEventListener('DOMContentLoaded',() => {
         $(form).removeClass('hidden')
     }
 
+    async function addVote(event) {
+        event.preventDefault()
+        let ans = await makeRequest(BASE_URL + event.target.id + '/add', 'POST')
+            .then(response => response.json())
+        console.log(ans)
+        let quote = await  makeRequest(BASE_URL + event.target.id, 'GET')
+            .then(response => response.json())
+        event.target.parentElement.getElementsByTagName('p')[1].innerText = 'Рейтинг' + ': ' + quote['rating']
+    }
+
+    async function removeVote(event) {
+        event.preventDefault()
+        let ans = await makeRequest(BASE_URL + event.target.id + '/remove', 'POST')
+            .then(response => response.json())
+        console.log(ans)
+        let quote = await  makeRequest(BASE_URL + event.target.id, 'GET')
+            .then(response => response.json())
+        event.target.parentElement.getElementsByTagName('p')[1].innerText = 'Рейтинг' + ': ' + quote['rating']
+    }
+
     const homeBtn = $('#home')
     $(homeBtn).on('click', quoteList)
 
@@ -150,9 +216,4 @@ window.addEventListener('DOMContentLoaded',() => {
 
     let saveBtn = $('#submit')
     $(saveBtn).on('click', saveForm)
-
-    let detailBtn = $('.detail')
-    $(detailBtn).on('click', quoteDetail)
-
-
 })

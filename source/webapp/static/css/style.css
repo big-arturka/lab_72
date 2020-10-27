@@ -274,3 +274,28 @@ input[type='submit']:hover {
     margin-right: 20px;
     text-decoration: none;
 }
+
+.push {
+    box-sizing: border-box;
+    padding: 20px;
+    border: solid 1px black;
+    border-radius: 5px;
+    color: white;
+    position: absolute;
+    bottom: 60px;
+    right: 60px;
+}
+
+.button {
+    background: white;
+    border: solid 1px black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+    color: black;
+}
+
+.button:hover {
+    background: black;
+    color: white;
+}
